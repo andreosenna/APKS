@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0ea5e9">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Apontamento">
+  <meta name="description" content="Sistema de apontamento de produção">
+
+  <title>Apontamento Fábrica</title>
+
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon.svg">
+  <link rel="stylesheet" href="/css/app.css">
+
+  <!-- Configuração do backend (auto-detecta Vercel vs local) -->
+  <script>
+    (function() {
+      // No Vercel (ou qualquer domínio que não seja localhost/IP local),
+      // a API está no mesmo domínio em /api. Localmente, usa porta 3001.
+      var host = window.location.hostname;
+      var isLocal = host === 'localhost' || host === '127.0.0.1' || /^192\.168\./.test(host) || /^10\./.test(host);
+      window.APP_CONFIG = {
+        backendUrl: isLocal
+          ? window.location.protocol + '//' + host + ':3001'
+          : window.location.origin
+      };
+    })();
+  </script>
+</head>
+<body>
+  <div id="app">
+    <!-- Header fixo -->
+    <header id="header">
+      <button class="header-logo header-home" id="btn-home" title="Voltar ao início" type="button" style="display:none;">
+        <span class="header-icon">🏠</span>
+        <span class="header-title">Apontamento</span>
+      </button>
+      <div class="header-actions">
+        <button class="btn-painel" id="btn-painel" title="Painel de producao" style="display:none;">📊 Painel</button>
+        <button class="btn-historico" id="btn-historico" title="Historico de apontamentos" style="display:none;">📋 Historico</button>
+        <button class="btn-historico" id="btn-fechar-turno" title="Abrir ou fechar turno" type="button" style="display:none;">▶ ABRIR TURNO</button>
+        <button class="modo-badge" id="badge-perfil" title="Clique em Trocar operador para sair" style="display:none; border:none; cursor:default; background:#ecfdf5; color:#166534;"></button>
+        <button class="btn-historico" id="btn-trocar-operador" title="Sair/Trocar operador" style="display:none;">↻ Trocar</button>
+        <div id="modo-badge" class="modo-badge" style="display:none;"></div>
+        <div id="storage-badge" class="modo-badge" style="display:none;"></div>
+        <div id="sync-status" class="sync-badge sync-online">● Online</div>
+      </div>
+    </header>
+
+    <!-- Banner de aviso (DB_MOCK etc) — preenchido via JS -->
+    <div id="aviso-global" class="aviso-global" style="display:none;"></div>
+
+    <!-- Indicador de etapas (4 passos: Centro → Máquina → OP → Apontamento) -->
+    <div id="steps" class="steps-bar">
+      <div class="step" data-step="0">
+        <div class="step-dot active" id="dot-0"></div>
+        <span class="step-label">Centro</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" data-step="1">
+        <div class="step-dot" id="dot-1"></div>
+        <span class="step-label">Máquina</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" data-step="2">
+        <div class="step-dot" id="dot-2"></div>
+        <span class="step-label">OP</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" data-step="3">
+        <div class="step-dot" id="dot-3"></div>
+        <span class="step-label">Apontamento</span>
+      </div>
+    </div>
+
+    <!-- Container das telas (renderizado via JS) -->
+    <main id="screens"></main>
+  </div>
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
